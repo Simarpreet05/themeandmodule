@@ -1,0 +1,104 @@
+<!-- 
+	Todos:
+		- Move inline style from id='map' to .less file
+		- Handle language in php and set the text in php
+		- move js in this file into a js file so magento can minify it
+-->
+
+<div id="map" style="height:450px; border: 5px solid lightgray;"></div>
+
+<script>
+	function initMap() {
+		var largeViewport = (Math.max(document.documentElement.clientWidth, window.innerWidth || 0)>=700) ? true : false;
+	    var mapCanvas = document.getElementById('map');
+		var locations = [
+						  ['Via Brasil', 8.990876,-79.518144, '1', 'viabrasil@techandhouse.com','9:00 am','6:00 pm', true],
+						  ['Centennial Mall', 9.031258,-79.532856, '2', 'centennial@techandhouse.com','10:00 am','7:30 pm', false],
+					  	  ['Atrio Mall', 9.021866, -79.462543, '3', 'atrio@techandhouse.com','10:00 am','8:00 pm', false]
+						];
+	    var mapOptions = {
+			scrollwheel: false,
+	        zoom: (largeViewport==true) ? 13 : 12,
+	        mapTypeId: google.maps.MapTypeId.ROADMAP
+	    }
+	    var map = new google.maps.Map(mapCanvas, mapOptions);
+		drawMarkers(map, locations, largeViewport);
+		map.setCenter(new google.maps.LatLng(9.025773, -79.501546));
+	}
+
+	function drawMarkers(map, locations, largeViewport) {
+		var marker, i;
+	
+		var language = 0;//document.getElementById('select-language').selectedIndex;
+	    var openText = (language==0 ? "Estamos Abiertos!" : "We are open!"); 
+	    var closedText = (language==0 ? "Estamos Cerrados." : "We are closed."); 
+    
+		for (i = 0; i < locations.length; i++) {  
+			var title = locations[i][0];
+			var lat = locations[i][1];
+			var long = locations[i][2];
+			var extension = locations[i][3];
+			var email = locations[i][4];
+			var opens = locations[i][5];
+			var closes = locations[i][6];
+			var closedOnSunday = locations[i][7];
+		
+			var isStoreOpen = isOpen(opens, closes, closedOnSunday);
+			if(isStoreOpen==true) openStatus = openText;
+		    else openStatus = closedText;
+				
+			latlngset = new google.maps.LatLng(lat, long);
+			var marker = new google.maps.Marker({  
+				map: map, title: title , position: latlngset  
+			});
+			map.setCenter(marker.getPosition());
+
+			var content = '<div id="content">'+
+	        '<div id="siteNotice">'+
+	        '</div>'+
+	        '<div id="bodyContent">'+
+	        '<p><strong>'+ title +'</strong></br></br>'+
+	        '<span style="text-decoration:underline">Tel</span>: <a href="tel:+507-263-9611">+507 263-9611 ext. '+extension+'</a></br>'+
+	        '<span style="text-decoration:underline">Email</span>: <a href="mailto:'+email+'">'+email+'</a></br>'+
+	        '<span style="text-decoration:underline">Hours</span>: '+opens+' to '+closes+'</br>'+
+	        '<p style="text-align:center;"><strong>'+openStatus+'</strong></p>'+
+	        '</div>'+
+	        '</div>';
+
+			var infowindow = new google.maps.InfoWindow();
+			infowindow.setContent(content);
+			if(largeViewport==true) { infowindow.open(map,marker); }
+
+			google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+				return function() {
+					infowindow.open(map,marker);
+				};
+			})(marker,content,infowindow)); 
+		}
+	}
+
+	function isOpen(opens, closes, closedOnSunday) {	
+		opens = opens.split(" ",1); //Just the time
+		closes = closes.split(" ",1); //Just the time
+	
+		opens = opens[0].split(":"); //Hour and Minute split
+		closes = closes[0].split(":"); //Hour and Minute split
+	
+		opensHour = Number(opens[0]);
+		opensMinute = Number(opens[1]);
+		closesHour = Number(closes[0])+12;
+		closesMinute = Number(closes[1]);
+	
+	    var nowObj = new Date();
+		var opensObj = new Date(nowObj.getFullYear(), nowObj.getMonth(), nowObj.getDate(), opensHour, opensMinute);
+		var closesObj = new Date(nowObj.getFullYear(), nowObj.getMonth(), nowObj.getDate(), closesHour, closesMinute);
+	
+	    if(nowObj.getDay()==0 && closedOnSunday==true) { return false; }
+	
+		if(nowObj.getTime() >= opensObj.getTime() && nowObj.getTime() <= closesObj.getTime()) {
+			return true;
+		} else return false;
+	}
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzyVXZ2pU8PXgRTjohKq34KojF9rI8sF4&callback=initMap" async defer></script>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magetech. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/menu.xsd">
+    <menu>
+        <add id="Magetech_Solution::magetech_services_index" title="View Services" module="Magetech_Solution"  sortOrder="20" dependsOnModule="Magetech_Solution" action="solution/services/index" resource="Magetech_Solution::magetech_services_index"/>
+<!--AddMenu-->
+    </menu>
+</config>

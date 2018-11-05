@@ -1,0 +1,37 @@
+<?php
+/**
+ * Copyright © 2015 Magetech . All rights reserved.
+ *  Block : Magetech\Solution\Block\Services;
+ */
+
+   $getCollection = $block->getServices();
+//echo '<pre>';
+//print_r($getCollection->getData()); 
+?>
+<div class="content">
+    <div class="col copy">
+		<h3>Authorized Service Centers</h3>
+		<p>Please have the <strong>model, serial number, invoice number</strong> and purchase date available before contacting any of the service centers. If you need help with any of this information, contact us.</p>
+	</div>
+</div>
+<div class="wrapper">
+
+   <?php foreach($getCollection as $brand => $brand_service_centers): ?>
+    	<div class="col-1 service-data">
+		<h2><?php echo $brand_service_centers->getName(); ?></h2>
+		<ul>
+		  <?php if($brand_service_centers->getData('getName')) { ?>	
+        <li><span><i class="fa fa-wrench" aria-hidden="true"></i></span><a href="#"><?php echo $brand_service_centers->getName(); ?></a></li>
+        <?php } if($brand_service_centers->getData('tel1')) { ?>
+        <li><span><i class="fa fa-phone" aria-hidden="true"></i></span><a href="tel:<?php echo $brand_service_centers->getData('tel1'); ?>"><?php echo $brand_service_centers->getData('tel1'); ?></a></li>
+        <?php } if($brand_service_centers->getData('email')) { ?>
+        <li><span><i class="fa fa-envelope" aria-hidden="true"></i></span><a href="mailto:<?php echo $brand_service_centers->getData('email'); ?>"><?php echo $brand_service_centers->getData('email'); ?></a></li>
+        <?php } if($brand_service_centers->getData('address')) { ?>
+        <li><span><i class="fa fa-folder-open" aria-hidden="true"></i></span><a href="#"><?php echo $brand_service_centers->getData('address'); ?></a></li>
+        <?php } ?>
+        <li><span><i class="fa fa-envelope" aria-hidden="true"></i></span><a href="#">Send An Email</a></li>
+		<li><span><i class="fa fa-folder-open" aria-hidden="true"></i></span><a href="#">Open A support Ticket</a></li>
+		</ul>
+	</div>
+    <?php endforeach; ?>
+</div>

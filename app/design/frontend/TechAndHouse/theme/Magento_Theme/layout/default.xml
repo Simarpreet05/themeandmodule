@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="logo">
+            <arguments>
+                <argument name="logo_file" xsi:type="string">images/logo.svg</argument>
+                <argument name="logo_img_width" xsi:type="number">172</argument>
+                <argument name="logo_img_height" xsi:type="number">64</argument>
+            </arguments>
+        </referenceBlock>
+		
+		<!-- Start: Remove Default Blocks -->
+		<referenceBlock name="breadcrumbs" remove="true" />
+        <referenceBlock name="form.subscribe" remove="true"/>
+        <referenceBlock name="footer_links" remove="true"/>
+		<referenceBlock name="catalog.leftnav" remove="true" /> <!-- Layered Nav -->
+		<referenceBlock name="copyright" remove="true" /><!--remove copywrite-->
+		
+		<referenceContainer name="content">
+			<referenceBlock name="product_list_toolbar" remove="true"/>
+        </referenceContainer>
+		<!-- End: Remove Default Blocks -->
+		
+		<!-- Start: Move Default Blocks -->
+		<move element="navigation.sections" destination="after.body.start"/>
+		<move element="header.panel" destination="header-wrapper"/>
+		<!-- End: Move Default Blocks -->
+		
+		<!-- Start: Add Custom Blocks -->
+        <referenceContainer name="footer">
+            <block class="Magento\Framework\View\Element\Template" template="Magento_Cms::store_map.phtml" />
+            <block class="Magento\Framework\View\Element\Template" template="Magento_Cms::footer_menu.phtml" />
+        </referenceContainer>
+		<!-- End: Add Custom Blocks -->
+		
+    </body>
+</page>
